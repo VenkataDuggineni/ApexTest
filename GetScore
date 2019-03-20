@@ -1,0 +1,48 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Web.Http;
+
+namespace ApexTest.Controllers
+{
+    public class SampleController : ApiController
+    {
+
+        // GET: api/Sample/5
+        public int Get(string inputData)
+        {
+            List<char> lst = new List<char>();
+            foreach (char c in inputData)
+            {
+                lst.Add(c);
+            }
+            return GetScore(lst);
+        }
+
+        public int GetScore(List<char> input)
+        {
+            int nestingLevel = 0;
+            int score = 0;
+            bool isGarbage = false;
+            for (var n = 0; n < input.Count; n++)
+            {
+                var c = input[n];
+                if (c == '!')
+                    n++;
+                else if (c == '>')
+                    isGarbage = false;
+                else if (c == '<')
+                    isGarbage = true;
+                else if (!isGarbage && c == '{')
+                    score += ++nestingLevel;
+                else if (!isGarbage && c == '}')
+                    nestingLevel--;
+            }
+            return score;
+        }
+
+
+    }
+}
